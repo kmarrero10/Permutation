@@ -1,48 +1,64 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
 
-    int size;
-    Node first;
+    private int n;
+    private Node first, last;
 
     public Deque() {
-        first = new Node();
-
+        first = null;
+        last = null;
+        n = 0;
     }
 
-    public boolean isEmpty(){
+    private class Node {
+        Item item;
+        Node next;
+    }
 
-        if (size == 0) {
-            return true;
-        } else
-            return false;
+    public boolean isEmpty() {
+        return first==null;
     }
 
     public int size() {
-
-        return size;
+        return n;
     }
 
-    public void addFirst(Item item){
+    public void addFirst(Item item) {
+        Node oldFirst = first;
+        first = new Node();
+        first.item=item;
+        first.next=oldFirst;
+        if (isEmpty()){last=first;}
 
+        n++;
     }
 
-    public void addLast(Item item){
-
+    public void addLast(Item item) {
+        Node oldLast = last;
+        last = new Node();
+        last.item=item;
+        last.next=null;
+        if (isEmpty()) {first = last;}
+       //    else oldLast.next=last;
+        n++;
     }
 
     public Item removeFirst() {
-
-        return null;
+        if (isEmpty()) throw new NoSuchElementException("stack underflow");
+        Item item = first.item;
+        first=first.next;
+        n--;
+        return item;
     }
 
     public Item removeLast() {
-        return null;
-    }
-
-    private class Node{
-        Item item;
-        Node next;
+        if (isEmpty()) throw new NoSuchElementException("stack underflow");
+        Item item = last.item;
+        last = last.next;
+        n--;
+        return item;
     }
 
     @Override
@@ -54,8 +70,9 @@ public class Deque<Item> implements Iterable<Item> {
 
         private Node current = first;
         public boolean hasNext() { return current != null;}
-        public void remove() throws UnsupportedOperationException { }
+        public void remove() {throw new UnsupportedOperationException();}
         public Item next(){
+            if(!hasNext()) {throw new NoSuchElementException();}
             Item item = current.item;
             current=current.next;
             return item;
