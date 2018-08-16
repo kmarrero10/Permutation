@@ -15,10 +15,11 @@ public class Deque<Item> implements Iterable<Item> {
     private class Node {
         Item item;
         Node next;
+        Node prev;
     }
 
     public boolean isEmpty() {
-        return first==null;
+        return n==0;
     }
 
     public int size() {
@@ -30,7 +31,8 @@ public class Deque<Item> implements Iterable<Item> {
         first = new Node();
         first.item=item;
         first.next=oldFirst;
-        if (isEmpty()){last=first;}
+        first.prev = null;
+        if (isEmpty()){last = first;}
 
         n++;
     }
@@ -40,14 +42,16 @@ public class Deque<Item> implements Iterable<Item> {
         last = new Node();
         last.item=item;
         last.next=null;
+        last.prev = oldLast;
         if (isEmpty()) {first = last;}
-       //    else oldLast.next=last;
+           else oldLast.next=last;
         n++;
     }
 
     public Item removeFirst() {
         if (isEmpty()) throw new NoSuchElementException("stack underflow");
         Item item = first.item;
+        first.item=null;
         first=first.next;
         n--;
         return item;
@@ -56,7 +60,8 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeLast() {
         if (isEmpty()) throw new NoSuchElementException("stack underflow");
         Item item = last.item;
-        last = last.next;
+        last.item=null;
+        last = last.prev;
         n--;
         return item;
     }
@@ -66,9 +71,13 @@ public class Deque<Item> implements Iterable<Item> {
         return new ListIterator();
     }
 
-    private class ListIterator implements Iterator<Item>{
+    //Issues are that the singly linked list iterator maintains a reference
+    //to the instantiated object via first/last variables
+    //This may also cause an issue with loitering
+    //Check this implementation https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html
 
-        private Node current = first;
+    private class ListIterator implements Iterator<Item>{
+        private Node current = first; //last
         public boolean hasNext() { return current != null;}
         public void remove() {throw new UnsupportedOperationException();}
         public Item next(){
