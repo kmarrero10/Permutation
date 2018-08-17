@@ -32,6 +32,7 @@ public class Deque<Item> implements Iterable<Item> {
         first.item=item;
         first.next=oldFirst;
         first.prev = null;
+        if(n>0){oldFirst.prev = first;}
         if (isEmpty()){last = first;}
 
         n++;
@@ -51,7 +52,6 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeFirst() {
         if (isEmpty()) throw new NoSuchElementException("stack underflow");
         Item item = first.item;
-        first.item=null;
         first=first.next;
         n--;
         return item;
@@ -60,8 +60,9 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeLast() {
         if (isEmpty()) throw new NoSuchElementException("stack underflow");
         Item item = last.item;
-        last.item=null;
         last = last.prev;
+        if(n==1){first=null;}
+        if (n>1){last.next=null;}
         n--;
         return item;
     }
