@@ -19,7 +19,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public boolean isEmpty() {
-        return n==0;
+        return n == 0;
     }
 
     public int size() {
@@ -27,32 +27,34 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void addFirst(Item item) {
+        if (item == null) throw new IllegalArgumentException();
         Node oldFirst = first;
         first = new Node();
-        first.item=item;
-        first.next=oldFirst;
+        first.item = item;
+        first.next = oldFirst;
         first.prev = null;
-        if(n>0){oldFirst.prev = first;}
-        if (isEmpty()){last = first;}
+        if (n > 0) { oldFirst.prev = first; }
+        if (isEmpty()) { last = first; }
 
         n++;
     }
 
     public void addLast(Item item) {
+        if (item == null) throw new IllegalArgumentException();
         Node oldLast = last;
         last = new Node();
-        last.item=item;
-        last.next=null;
+        last.item = item;
+        last.next = null;
         last.prev = oldLast;
-        if (isEmpty()) {first = last;}
-           else oldLast.next=last;
+        if (isEmpty()) { first = last; }
+           else oldLast.next = last;
         n++;
     }
 
     public Item removeFirst() {
         if (isEmpty()) throw new NoSuchElementException("stack underflow");
         Item item = first.item;
-        first=first.next;
+        first = first.next;
         n--;
         return item;
     }
@@ -61,8 +63,8 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty()) throw new NoSuchElementException("stack underflow");
         Item item = last.item;
         last = last.prev;
-        if(n==1){first=null;}
-        if (n>1){last.next=null;}
+        if (n == 1) { first = null; }
+        if (n > 1) { last.next = null; }
         n--;
         return item;
     }
@@ -72,19 +74,14 @@ public class Deque<Item> implements Iterable<Item> {
         return new ListIterator();
     }
 
-    //Issues are that the singly linked list iterator maintains a reference
-    //to the instantiated object via first/last variables
-    //This may also cause an issue with loitering
-    //Check this implementation https://algs4.cs.princeton.edu/13stacks/DoublyLinkedList.java.html
-
-    private class ListIterator implements Iterator<Item>{
-        private Node current = first; //last
-        public boolean hasNext() { return current != null;}
-        public void remove() {throw new UnsupportedOperationException();}
-        public Item next(){
-            if(!hasNext()) {throw new NoSuchElementException();}
+    private class ListIterator implements Iterator<Item> {
+        private Node current = first;
+        public boolean hasNext() { return current != null; }
+        public void remove() { throw new UnsupportedOperationException(); }
+        public Item next() {
+            if (!hasNext()) { throw new NoSuchElementException(); }
             Item item = current.item;
-            current=current.next;
+            current = current.next;
             return item;
         }
 

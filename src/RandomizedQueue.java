@@ -15,18 +15,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private void resize(int capacity) {
         assert capacity >= n;
-
-        // textbook implementation
-//        Item[] temp = (Item[]) new Object[capacity];
-//        for (int i = 0; i < n; i++) {
-//            temp[i] = a[i];
-//        }
-//        a = temp;
         a = java.util.Arrays.copyOf(a, capacity);
     }
 
     public boolean isEmpty() {
-        return n==0;
+        return n == 0;
     }
 
     public int size() {
@@ -34,17 +27,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public void enqueue(Item item) {
-        n++;
+        if (item == null) throw new IllegalArgumentException();
         if (n == a.length) resize(2*a.length);
-        a[n++] = item;
+        a[n] = item;
+        n++;
 
     }
 
-    public int randomIndex() {
-        return StdRandom.uniform(n-1);
+    private int randomIndex() {
+        return StdRandom.uniform(n);
     }
 
     public Item dequeue() {
+        if (isEmpty()) throw new NoSuchElementException("Stack underflow");
         int i = randomIndex();
         Item j = a[i];
         a[i] = a[n-1];
@@ -76,12 +71,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private void copy() {
             j = (Item[]) new Object[n];
 
-            for(int i =0; i<n; i++) {
+            for (int i = 0; i < n; i++) {
                 j[i] = a[i];
             }
         }
-        public boolean hasNext()  { return i < n-1; }
-        public void remove()      { throw new UnsupportedOperationException();  }
+        public boolean hasNext()  { return i < n; }
+        public void remove()      { throw new UnsupportedOperationException(); }
 
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
